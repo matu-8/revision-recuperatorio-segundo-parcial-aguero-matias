@@ -9,15 +9,17 @@ export const createLanguage = async(req, res) => {
         const uniqueLanguageId = await Language.findOne({where: {id}});
         if(uniqueLanguageId)
             return res.status(400).json({message:"El lenguaje ya existe"})
-console.log(typeof paradigm)
+        console.log(typeof paradigm)
         if(typeof paradigm!=="string")
             return res.status(400).json({message:"Paradigm solo debe ser string"})
 
         const createdLanguage = await Language.create(
-            {id,
+            {
+            id,
             name,
             paradigm,
-            release_year,}
+            release_year,
+            }
         );
        return res.status(201).json({message:"El lenguaje se creó", createdLanguage})
     } catch (error) {
@@ -31,24 +33,26 @@ console.log(typeof paradigm)
  export const getAllLanguages = async(req, res) => {
     try {
         const language = await Language.findAll();
-        if(language.length > 0)
+        if(language){
             return res.status(200).json({message:"Se Trajeron todos los lenguajes", language})
-        return res.status(400).json({message:"La base de datos está vacía"})
+        }else{
+            return res.status(400).json({message:"La base de datos está vacía"})
+        }
     } catch (error) {
         return res.status(500).json({err:error.message});  
     }
  };
-
  //traer personajes por id
 
  export const getLanguageById = async (req, res)=> {
  
     try {
         const language = await Language.findByPk(req.params.id)
-        if(language)
+        if(!language)
             return res.status(400).json
-        ({message:"No se encontró el lenguaje"})
-            res.status(200).json
+            ({message:"No se encontró el lenguaje"})
+            
+            return res.status(200).json
             ({message:"Se trajo el lenguaje", language})
 
     } catch (error) {
@@ -68,17 +72,14 @@ console.log(typeof paradigm)
 
         const nameunique = await Language.findOne({where:{name}})
         if(nameunique)
-
             return res.status(400).json({message:"El nombre de lenguaje ya existe"})
 
         const updatedLanguage = await Language.update(  
-
             {
                 id,
                 name,
                 paradigm,
                 release_year, 
-
             }
         );
         res.status(200).json({message:"Se actualizó el mensaje", updatedLanguage})
