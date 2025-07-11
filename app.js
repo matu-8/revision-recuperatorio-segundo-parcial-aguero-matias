@@ -6,8 +6,8 @@ import { routerLanguage } from "./src/routes/language.routes.js";
 const app = express();
 const PORT = process.env.PORT
 
-app.use(express.json);
-app.use(routerLanguage);
+app.use(express.json());
+app.use("/api", routerLanguage);
 
 export const connectdb = async () => {
     try {
